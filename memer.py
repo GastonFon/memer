@@ -11,7 +11,6 @@ from config import *
 #Make the discord client
 client = discord.Client()
 
-
 @client.event
 async def on_ready():
     print("The bot is ready!")
