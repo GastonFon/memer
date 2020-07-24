@@ -60,8 +60,8 @@ async def on_message(message):
 
     msg = msg[1:]
 
-    if msg.startswith('get'):
-        msg = msg[4:]
+    if msg.startswith('meme'):
+        msg = msg[5:]
         img=getMeme(msg)
 
         if len(str(img))>0:
