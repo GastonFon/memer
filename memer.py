@@ -58,7 +58,10 @@ def help():
     ayuda += "=====================\n"
     ayuda += "[Lista de memes]\n"
     for x in data:
-        ayuda += "* {}: {} parámetros\n".format(x, len(data[x]['textpos']))
+        maximo = 0
+        for linea in data[x]['textpos']:
+            maximo = max(maximo, linea['id'])
+        ayuda += "* {}: {} parámetros\n".format(x, maximo+1)
     ayuda += "Los parámetros se separan con guión bajo (_)\n"
     ayuda += "Ejemplo: ;meme drake_memes con paint_memes con memer"
     ayuda += "```"
