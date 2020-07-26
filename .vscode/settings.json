@@ -1,19 +1,20 @@
 {
+  "python.pythonPath": "D:\\DATOS\\Documents\\Programacion\\proyectos\\memer\\Scripts\\python",
   "____restoreTerminals.artificialDelayMilliseconds": 2000,
-    "restoreTerminals.terminals": [
-      {
-        "splitTerminals": [
-          {
-            "name": "Activar entorno virtual",
-            "commands": [
-              "cd..",
-              "cd scripts",
-              "activate",
-              "cd..",
-              "cd memer"
-            ]
-          }
-        ]
-      }
-    ]
-  }
+  "restoreTerminals.terminals": [
+    {
+      "splitTerminals": [
+        {
+          "name": "Activar entorno virtual",
+          "commands": [
+            "cd..",
+            "cd scripts",
+            "activate",
+            "cd..",
+            "cd memer"
+          ]
+        }
+      ]
+    }
+  ]
+}
