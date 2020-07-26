@@ -16,10 +16,8 @@ async def on_ready():
     print("The bot is ready!")
 
 def getParams(msg):
-    #Devuelve una lista con tres valores (deben estar separados con '_')
-    #Primero nombre del meme.
-    #Segundo texto 1.
-    #Tercero texto 2
+    #Devuelve una lista con valores, separados por '_'
+    #Primero nombre del meme, y luego los textos del mismo
     return msg.split('_')
 
 #Get meme
@@ -38,8 +36,15 @@ def getMeme(memeInfo):
             texto = texto[1:]
             memes = json.load(data)
             textPos = memes[currentMeme]['textpos']
+            if "color" in memes[currentMeme]:
+                color = tuple(memes[currentMeme]['color'])
+            else:
+                color = (0, 0, 0) #color negro por default
             for i in range(len(textPos)):
-                draw.text(xy=(textPos[i]['x'], textPos[i]['y']), text=texto[i], fill=(0, 0, 0), font=font_type)
+                pos = (textPos[i]['x'], textPos[i]['y'])
+                linea = texto[textPos[i]['id']]
+                #dibuja el texto en el meme dependiendo de lo que dice metadata.json
+                draw.text(xy=pos, text=linea, fill=color, font=font_type)
         
         image.save('temp.jpg')
         return 'temp.jpg'
