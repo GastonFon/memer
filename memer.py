@@ -46,6 +46,15 @@ def getMeme(memeInfo):
     except:
         return ''
     
+def help():
+    data = json.load(open("metadata.json", "r"))
+    ayuda = "Memer, bot de discord\n"
+    for x in data:
+        ayuda += "{}: {} parámetros\n".format(x, len(data[x]['textpos']))
+    ayuda += "Los parámetros se separaon con guión bajo (_)\n"
+    ayuda += "Ejemplo: ;meme drake_memes con paint_memes con memer"
+    return ayuda
+    
 @client.event
 async def on_message(message):
     #Chequeamos que el bot no se esté respondiendo solo
@@ -61,7 +70,9 @@ async def on_message(message):
     msg = msg[1:]
 
     if msg.startswith('meme'):
-        msg = msg[5:]
+        msg = msg[5:].lower()
+        if(mst == "list" || msg == "help"):
+            await message.channel.send(help)
         img=getMeme(msg)
 
         if len(str(img))>0:
