@@ -71,7 +71,7 @@ async def on_message(message):
 
     if msg.startswith('meme'):
         msg = msg[5:].lower()
-        if(mst == "list" || msg == "help"):
+        if mst == "list" || msg == "help":
             await message.channel.send(help)
         img=getMeme(msg)
 
