@@ -51,7 +51,7 @@ def help():
     ayuda = "Memer, bot de discord\n"
     for x in data:
         ayuda += "{}: {} parámetros\n".format(x, len(data[x]['textpos']))
-    ayuda += "Los parámetros se separaon con guión bajo (_)\n"
+    ayuda += "Los parámetros se separan con guión bajo (_)\n"
     ayuda += "Ejemplo: ;meme drake_memes con paint_memes con memer"
     return ayuda
     
@@ -72,7 +72,7 @@ async def on_message(message):
     if msg.startswith('meme'):
         msg = msg[5:].lower()
         if msg == "list" or msg == "help":
-            await message.channel.send(help)
+            await message.channel.send(help())
         img=getMeme(msg)
 
         if len(str(img))>0:
