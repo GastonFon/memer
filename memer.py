@@ -28,7 +28,7 @@ def getMeme(memeInfo):
         image=Image.open('img/'+texto[0]+'.jpg')
         aspectRatio = image.size[1] / image.size[0]
         image=image.resize((512, round(aspectRatio * 512)))
-        font_type=ImageFont.truetype('fonts/Roboto.ttf', 20)
+        font_type=ImageFont.truetype('fonts/Roboto.ttf', 32)
         draw=ImageDraw.Draw(image)
        
         with open("metadata.json", "r") as data:
