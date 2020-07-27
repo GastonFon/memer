@@ -25,14 +25,14 @@ def getMeme(memeInfo):
     try: 
         texto=getParams(memeInfo)
 
-        image=Image.open('img/'+texto[0]+'.jpg')
+        image=Image.open('img/'+texto[0].lower()+'.jpg')
         aspectRatio = image.size[1] / image.size[0]
         image=image.resize((512, round(aspectRatio * 512)))
         font_type=ImageFont.truetype('fonts/Roboto.ttf', 32)
         draw=ImageDraw.Draw(image)
        
         with open("metadata.json", "r") as data:
-            currentMeme = str(texto[0])
+            currentMeme = str(texto[0].lower())
             texto = texto[1:]
             memes = json.load(data)
             textPos = memes[currentMeme]['textpos']
@@ -82,7 +82,7 @@ async def on_message(message):
     msg = msg[1:]
 
     if msg.startswith('meme'):
-        msg = msg[5:].lower()
+        msg = msg[5:]
         if msg == "list" or msg == "help":
             await message.channel.send(help())
             return
