@@ -118,8 +118,5 @@ GitHub.sublime-settings
 !.vscode/extensions.json 
 .history
 
-# Temp directory #
-tmp/
-
 # Vim directory #
 .vim/
