@@ -43,8 +43,8 @@ def getMeme(memeInfo):
                 #dibuja el texto en el meme dependiendo de lo que dice metadata.json
                 draw.text(xy=pos, text=linea, fill=color, font=font_type)
         
-        image.save('./tmp/meme.jpg')
-        return './tmp/meme.jpg'
+        image.save('temp.jpg')
+        return 'temp.jpg'
     except:
         return ''
     
@@ -86,8 +86,7 @@ async def on_message(message):
         img = getMeme(msg)
 
         if len(str(img)) > 0:
-            with open(img, "rb") as memeImage:
-                await message.channel.send(file=memeImage)
+            await message.channel.send(file=Discord.file(img))
             await message.delete()
         else:
             await message.channel.send("Joke not found.")
