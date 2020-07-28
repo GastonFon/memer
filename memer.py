@@ -20,13 +20,13 @@ def getParams(msg):
 #Get meme
 def getMeme(memeInfo): 
     try: 
-        texto=getParams(memeInfo)
+        texto = getParams(memeInfo)
 
-        image=Image.open('img/'+texto[0].lower()+'.jpg')
+        image = Image.open('./img/'+texto[0].lower()+'.jpg')
         aspectRatio = image.size[1] / image.size[0]
-        image=image.resize((512, round(aspectRatio * 512)))
-        font_type=ImageFont.truetype('fonts/Roboto.ttf', 32)
-        draw=ImageDraw.Draw(image)
+        image = image.resize((512, round(aspectRatio * 512)))
+        font_type = ImageFont.truetype('./fonts/Roboto.ttf', 32)
+        draw = ImageDraw.Draw(image)
        
         with open("metadata.json", "r") as data:
             currentMeme = str(texto[0].lower())
@@ -43,8 +43,8 @@ def getMeme(memeInfo):
                 #dibuja el texto en el meme dependiendo de lo que dice metadata.json
                 draw.text(xy=pos, text=linea, fill=color, font=font_type)
         
-        image.save('tmp/meme.jpg')
-        return 'tmp/meme.jpg'
+        image.save('./tmp/meme.jpg')
+        return './tmp/meme.jpg'
     except:
         return ''
     
@@ -83,9 +83,9 @@ async def on_message(message):
         if msg == "list" or msg == "help":
             await message.channel.send(help())
             return
-        img=getMeme(msg)
+        img = getMeme(msg)
 
-        if len(str(img))>0:
+        if len(str(img)) > 0:
             await message.channel.send(file=discord.File(img))
             await message.delete()
         else:
