@@ -94,4 +94,4 @@ async def on_message(message):
         else:
             await message.channel.send("Joke not found.")
 
-client.run(DISCORD_TOKEN)
+client.run(os.environ['DISCORD_TOKEN'])
