@@ -1,6 +1,6 @@
 import discord
-
 import json
+import os 
 
 #Import PIL to edit images
 from PIL import Image, ImageDraw, ImageFont
