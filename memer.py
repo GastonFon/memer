@@ -5,9 +5,6 @@ import os
 #Import PIL to edit images
 from PIL import Image, ImageDraw, ImageFont
 
-#Import token
-from config import *
-
 #Make the discord client
 client = discord.Client()
 
@@ -46,8 +43,8 @@ def getMeme(memeInfo):
                 #dibuja el texto en el meme dependiendo de lo que dice metadata.json
                 draw.text(xy=pos, text=linea, fill=color, font=font_type)
         
-        image.save('temp.jpg')
-        return 'temp.jpg'
+        image.save('tmp/meme.jpg')
+        return 'tmp/meme.jpg'
     except:
         return ''
     
