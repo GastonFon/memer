@@ -86,7 +86,8 @@ async def on_message(message):
         img = getMeme(msg)
 
         if len(str(img)) > 0:
-            await message.channel.send(file=discord.File(img))
+            with open(img, "rb") as memeImage:
+                await message.channel.send(file=memeImage)
             await message.delete()
         else:
             await message.channel.send("Joke not found.")
