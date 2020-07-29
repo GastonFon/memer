@@ -56,7 +56,5 @@ async def on_message(message):
             await message.delete()
         except ValueError:
             await message.channel.send("Joke not found.")
-        finally:
-            del MemeManager
 
 client.run(os.environ['DISCORD_TOKEN'])
