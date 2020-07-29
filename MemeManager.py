@@ -40,7 +40,7 @@ class MemeManager:
                 pos[0] - round(textImg.size[0] / 2), 
                 pos[1] - round(textImg.size[1] / 2), 
             )
-            image.paste(textImg, box=corners)
+            image.paste(textImg, box=corners, mask=textImg)
         image.save('temp.jpg')
         image.close()
         return
@@ -56,11 +56,12 @@ class MemeManager:
 
     def textToImage(self, text, deg): 
         font = ImageFont.truetype(self.FONT_PATH, self.FONT_SIZE)
-        fondo = (255, 255, 255)
-        textImg = Image.new("RGBA", font.getsize(text), color=fondo)
+        textImg = Image.new("RGBA", font.getsize(text),
+                color=(255, 255, 255, 255))
         textDraw = ImageDraw.Draw(textImg)
         textDraw.text((0, 0), text=text, font=font, fill=(0, 0, 0))
-        textImg = textImg.rotate(deg, expand=1, fillcolor=fondo)
+        textImg = textImg.rotate(deg, expand=1,
+                fillcolor=(255, 255, 255, 0))
         return textImg
 
 
