@@ -16,7 +16,7 @@ class MemeManager:
         memeName = text[0].lower()
         text = text[1:]
         try:
-            imagePath = './img' + memeName + '.jpg'
+            imagePath = './img/' + memeName + '.jpg'
             image = Image.open(imagePath)
         except FileNotFoundError:
             raise ValueError("File not found")
@@ -25,18 +25,19 @@ class MemeManager:
             dataJSON = json.load(data)
         memeInfo = dataJSON[memeName]
         if "color" in memeInfo:
-            color = tuple(memeInfo.color)
+            color = tuple(memeInfo['color'])
         else:
             color = (0, 0, 0)
-        textpos = memeInfo.textpos
+        textpos = memeInfo['textpos']
         image = self.resizeImage(image)
         font = ImageFont.truetype(self.FONT_PATH, self.FONT_SIZE)
         draw = ImageDraw.Draw(image)
         for i in range(len(textpos)):
-            pos = (textpos[i].x, textpos[i].y)
-            linea = text[textpos[i].id]
+            pos = (textpos[i]["x"], textpos[i]["y"])
+            linea = text[textpos[i]["id"]]
             draw.text(xy=pos, text=linea, fill=color, font=font)
         image.save('temp.jpg')
+        image.close()
         return
 
     def getParams(self):
@@ -46,4 +47,9 @@ class MemeManager:
         aspectRatio = image.size[1] / image.size[0]
         width = self.IMAGE_WIDTH
         height = round(aspectRatio * width)
-        return image.resize(width, height)
+        return image.resize((width, height))
+
+if __name__ == '__main__':
+    instance = MemeManager("drake_test_TEST")
+    instance.getMeme()
+

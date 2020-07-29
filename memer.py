@@ -2,7 +2,7 @@ import discord
 import json
 import os 
 
-from MemeManager import *
+from MemeManager import MemeManager
 
 #Make the discord client
 client = discord.Client()
@@ -12,7 +12,8 @@ async def on_ready():
     print("The bot is ready!")
     
 def help():
-    data = json.load(open("metadata.json", "r"))
+    with open("metadata.json", "r") as metadata:
+        data = json.load(metadata)
     ayuda = "```asciidoc"
     ayuda += "\nMemer, bot de discord\n"
     ayuda += "=====================\n"
