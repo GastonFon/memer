@@ -39,8 +39,6 @@ class MemeManager:
             corners = (
                 pos[0] - round(textImg.size[0] / 2), 
                 pos[1] - round(textImg.size[1] / 2), 
-                pos[0] + round(textImg.size[0] / 2), 
-                pos[1] + round(textImg.size[1] / 2)
             )
             image.paste(textImg, box=corners)
         image.save('temp.jpg')
