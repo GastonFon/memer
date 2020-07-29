@@ -24,10 +24,6 @@ class MemeManager:
         with open("metadata.json", "r") as data:
             dataJSON = json.load(data)
         memeInfo = dataJSON[memeName]
-        if "color" in memeInfo:
-            color = tuple(memeInfo['color'])
-        else:
-            color = (0, 0, 0)
         textpos = memeInfo['textpos']
         image = self.resizeImage(image)
         for i in range(len(textpos)):
@@ -39,8 +35,14 @@ class MemeManager:
                 rotacion = 0
             if (rotacion < 0):
                 rotacion += 360
-            textImg = self.textToImage(linea, color, rotacion)
-            image.paste(textImg, box=pos, mask=textImg)
+            textImg = self.textToImage(linea, rotacion)
+            corners = (
+                pos[0] - round(textImg.size[0] / 2), 
+                pos[1] - round(textImg.size[1] / 2), 
+                pos[0] + round(textImg.size[0] / 2), 
+                pos[1] + round(textImg.size[1] / 2)
+            )
+            image.paste(textImg, box=corners)
         image.save('temp.jpg')
         image.close()
         return
@@ -54,13 +56,13 @@ class MemeManager:
         height = round(aspectRatio * width)
         return image.resize((width, height))
 
-    def textToImage(self, text, color, deg): 
+    def textToImage(self, text, deg): 
         font = ImageFont.truetype(self.FONT_PATH, self.FONT_SIZE)
-        inv = (255, 255, 255, 0)
-        textImg = Image.new("RGBA", font.getsize(text), color=inv)
+        fondo = (255, 255, 255)
+        textImg = Image.new("RGBA", font.getsize(text), color=fondo)
         textDraw = ImageDraw.Draw(textImg)
-        textDraw.text((0, 0), text=text, font=font, fill=color)
-        textImg = textImg.rotate(deg, expand=1, fillcolor=inv)
+        textDraw.text((0, 0), text=text, font=font, fill=(0, 0, 0))
+        textImg = textImg.rotate(deg, expand=1, fillcolor=fondo)
         return textImg
 
 
