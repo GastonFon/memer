@@ -69,7 +69,7 @@ async def on_reaction_add(reaction, user):
         page = max(page - 1, 1)
     elif str(reaction) == ":arrow_right:":
         page = page + 1
-    message.edit(content=help(page))
+    await message.edit(content=help(page))
 
     
 
