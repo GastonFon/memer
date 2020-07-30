@@ -47,12 +47,17 @@ class MemeManager:
             rotacion = self.getRotation(data["deg"])
         else:
             rotacion = 0
-        textImg = self.textToImage(texto, rotacion)
-        corner = (
-            data['x'] - round(textImg.size[0] / 2),
-            data['y'] - round(textImg.size[1] / 2)
-        )
-        image.paste(textImg, box=corner, mask=textImg)
+        textoSeparado = texto.split('\n')
+        contador = 0
+        for i in textoSeparado:
+            textImg = self.textToImage(i, rotacion)
+            corner = (
+                data['x'] - round(textImg.size[0] / 2),
+                data['y'] - round(textImg.size[1] / 2)
+                    + textImg.size[1] * contador
+            )
+            contador = contador + 1
+            image.paste(textImg, box=corner, mask=textImg)
 
     def getRotation(self, deg):
         return ((deg % 360) + 360) % 360
