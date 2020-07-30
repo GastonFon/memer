@@ -55,16 +55,12 @@ async def on_message(message):
 @client.event
 async def on_reaction_add(reaction, user):
     message = reaction.message
-    msg = str(message)
-    print(str(reaction))
+    msg = str(message.content)
+    if user == client.user:
+        return
     if message.author != client.user:
-        print("Message author is not user")
         return
     if str(reaction) != "\U00002B05" and str(reaction) != "\U000027A1":
-        print("Reaction not left or right arrow")
-        return
-    if not msg.startswith("```asciidoc"):
-        print("Message doesn't start with asciidoc")
         return
     pageRegex = re.compile(r"\d+\]")
     page = pageRegex.search(msg).group(0)[:-1]
