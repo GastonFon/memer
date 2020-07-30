@@ -56,6 +56,7 @@ async def on_message(message):
 async def on_reaction_add(reaction, user):
     message = reaction.message
     msg = str(message)
+    print(str(reaction))
     if message.author != client.user:
         return
     if str(reaction) != "\U00002B05" and str(reaction) != "\U000027A1":
