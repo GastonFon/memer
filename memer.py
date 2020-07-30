@@ -36,12 +36,18 @@ async def on_message(message):
             await helpMsg.add_reaction("\U00002B05")
             await helpMsg.add_reaction("\U000027A1")
             return
-        
+            
+    channel = message.channel
+
+    if msg.startswith("general"):
+        channel = client.get_channel(738515125245575169)
+        msg = msg[8:]
+
     memeManager = MemeManager(msg)
-    
+
     try:
         memeManager.getMeme()
-        await message.channel.send(file=discord.File('temp.jpg'))
+        await channel.send(file=discord.File('temp.jpg'))
         await message.delete()
     except ValueError:
         await message.channel.send("Joke not found.")
