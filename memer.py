@@ -42,11 +42,11 @@ async def on_message(message):
     try:
         memeManager.getMeme()
         await message.channel.send(file=discord.File('temp.jpg'))
+        await message.delete()
     except ValueError:
         await message.channel.send("Joke not found.")
-
-    try:
-        await message.delete()
+    except TypeError:
+        await message.channel.send("Not enough arguments")
     except discord.errors.Forbidden:
         print("Tried to delete message")
 

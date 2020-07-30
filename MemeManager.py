@@ -27,8 +27,11 @@ class MemeManager:
         textpos = memeInfo['textpos']
         image = self.resizeImage(image)
         for i in range(len(textpos)):
-            linea = text[textpos[i]["id"]]
-            self.printText(linea, textpos[i], image)
+            try:
+                linea = text[textpos[i]["id"]]
+                self.printText(linea, textpos[i], image)
+            except IndexError:
+                raise TypeError("Not enough arguments")
         image.save('temp.jpg')
         image.close()
         return
