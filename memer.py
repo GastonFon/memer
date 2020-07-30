@@ -35,8 +35,8 @@ async def on_message(message):
                 page = 1
             finally:
                 helpMsg = await message.channel.send(help(page))
-                await message.channel.add_reaction(helpMsg, ":arrow_left:")
-                await message.channel.add_reaction(helpMsg, ":arrow_right:")
+                await helpMsg.add_reaction("\U00002B05")
+                await helpMsg.add_reaction("\U000027A1")
                 return
         
         memeManager = MemeManager(msg)
@@ -58,16 +58,16 @@ async def on_reaction_add(reaction, user):
     msg = str(message)
     if message.author != client.user:
         return
-    if str(reaction) != ":arrow_left:" and str(reaction.emoji) != ":arrow_right:":
+    if str(reaction) != "\U00002B05" and str(reaction) != "\U000027A1":
         return
     if not msg.startswith("```asciidoc"):
         return
     pageRegex = re.compile(r"\d+\]")
     page = pageRegex.search(msg).group(0)[:-1]
     page = int(page)
-    if str(reaction) == ":arrow_left:":
+    if str(reaction) == "\U00002B05":
         page = max(page - 1, 1)
-    elif str(reaction) == ":arrow_right:":
+    elif str(reaction) == "\U000027A1":
         page = page + 1
     await message.edit(content=help(page))
 
