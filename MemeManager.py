@@ -27,20 +27,8 @@ class MemeManager:
         textpos = memeInfo['textpos']
         image = self.resizeImage(image)
         for i in range(len(textpos)):
-            pos = (textpos[i]["x"], textpos[i]["y"])
             linea = text[textpos[i]["id"]]
-            if "deg" in textpos[i]:
-                rotacion = textpos[i]["deg"] % 360
-            else:
-                rotacion = 0
-            if (rotacion < 0):
-                rotacion += 360
-            textImg = self.textToImage(linea, rotacion)
-            corners = (
-                pos[0] - round(textImg.size[0] / 2), 
-                pos[1] - round(textImg.size[1] / 2), 
-            )
-            image.paste(textImg, box=corners, mask=textImg)
+            self.printText(linea, textpos[i], image)
         image.save('temp.jpg')
         image.close()
         return
@@ -54,14 +42,36 @@ class MemeManager:
         height = round(aspectRatio * width)
         return image.resize((width, height))
 
+    def printText(self, texto, data, image):
+        if "deg" in data:
+            rotacion = self.getRotation(data["deg"])
+        else:
+            rotacion = 0
+        textImg = self.textToImage(texto, rotacion)
+        corner = (
+            data['x'] - round(textImg.size[0] / 2),
+            data['y'] - round(textImg.size[1] / 2)
+        )
+        image.paste(textImg, box=corner, mask=textImg)
+
+    def getRotation(self, deg):
+        return ((deg % 360) + 360) % 360
+
     def textToImage(self, text, deg): 
         font = ImageFont.truetype(self.FONT_PATH, self.FONT_SIZE)
         textImg = Image.new("RGBA", font.getsize(text),
                 color=(255, 255, 255, 255))
         textDraw = ImageDraw.Draw(textImg)
-        textDraw.text((0, 0), text=text, font=font, fill=(0, 0, 0))
-        textImg = textImg.rotate(deg, expand=1,
-                fillcolor=(255, 255, 255, 0))
+        textDraw.text(
+            (0, 0),
+            text=text,
+            font=font,
+            fill=(0, 0, 0)
+        )
+        textImg = textImg.rotate(
+            deg, expand=1,
+            fillcolor=(255, 255, 255, 0)
+        )
         return textImg
 
 

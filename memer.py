@@ -21,53 +21,53 @@ async def on_message(message):
     #Recibo el mensaje
     msg = str(message.content)
 
-    if not msg.startswith(';'):
+    if not msg.startswith(';meme'):
         return
 
-    msg = msg[1:]
+    msg = msg[6:]
 
-    if msg.startswith('meme'):
-        msg = msg[5:]
-        if msg.startswith("list") or msg.startswith("help"):
-            try:
-                page = int(msg[5:])
-            except ValueError:
-                page = 1
-            finally:
-                helpMsg = await message.channel.send(help(page))
-                await helpMsg.add_reaction("\U00002B05")
-                await helpMsg.add_reaction("\U000027A1")
-                return
-        
-        memeManager = MemeManager(msg)
-        
+    if msg.startswith("list") or msg.startswith("help"):
         try:
-            memeManager.getMeme()
-            await message.channel.send(file=discord.File('temp.jpg'))
+            page = int(msg[5:])
         except ValueError:
-            await message.channel.send("Joke not found.")
+            page = 1
+        finally:
+            helpMsg = await message.channel.send(help(page))
+            await helpMsg.add_reaction("\U00002B05")
+            await helpMsg.add_reaction("\U000027A1")
+            return
+        
+    memeManager = MemeManager(msg)
+    
+    try:
+        memeManager.getMeme()
+        await message.channel.send(file=discord.File('temp.jpg'))
+    except ValueError:
+        await message.channel.send("Joke not found.")
 
-        try:
-            await message.delete()
-        except discord.errors.Forbidden:
-            print("Tried to delete message")
+    try:
+        await message.delete()
+    except discord.errors.Forbidden:
+        print("Tried to delete message")
 
 @client.event
 async def on_reaction_add(reaction, user):
+    LEFT_ARROW = "\U00002B05"
+    RIGHT_ARROW = "\U000027A1"
     message = reaction.message
     msg = str(message.content)
     if user == client.user:
         return
     if message.author != client.user:
         return
-    if str(reaction) != "\U00002B05" and str(reaction) != "\U000027A1":
+    emoji = str(reaction)
+    if emoji != LEFT_ARROW and emoji != RIGHT_ARROW:
         return
     pageRegex = re.compile(r"\d+\]")
-    page = pageRegex.search(msg).group(0)[:-1]
-    page = int(page)
-    if str(reaction) == "\U00002B05":
+    page = int(pageRegex.search(msg).group(0)[:-1])
+    if emoji == LEFT_ARROW:
         page = max(page - 1, 1)
-    elif str(reaction) == "\U000027A1":
+    elif emoji == RIGHT_ARROW:
         page = page + 1
     await message.edit(content=help(page))
 
@@ -82,15 +82,17 @@ def help(page):
     ayuda += "[Lista de memes: Página {}]\n".format(page)
     actual = 0
     for x in data:
-        actual = actual + 1
         if actual // 10 != (page - 1):
+            actual = actual + 10
             continue
+        actual = actual + 1
         maximo = 0
         for linea in data[x]['textpos']:
             maximo = max(maximo, linea['id'])
         ayuda += "* {}: {} parámetros\n".format(x, maximo+1)
     ayuda += "Los parámetros se separan con guión bajo (_)\n"
-    ayuda += "Ejemplo: ;meme drake_memes con paint_memes con memer"
+    ayuda += "Ejemplo: "
+    ayuda += ";meme drake_memes con paint_memes con memer"
     ayuda += "```"
     return ayuda
     
