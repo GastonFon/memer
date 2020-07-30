@@ -83,7 +83,7 @@ def help(page):
     actual = 0
     for x in data:
         if actual // 10 != (page - 1):
-            actual = actual + 10
+            actual = actual + 1
             continue
         actual = actual + 1
         maximo = 0
