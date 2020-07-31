@@ -52,8 +52,8 @@ class MemeManager:
         linea = text[0]
         font = ImageFont.truetype(self.FONT_PATH, self.FONT_SIZE)
         pos = (
-            textpos[0]["x"] - font.getsize(linea)[0], 
-            textpos[0]["y"] - font.getsize(linea)[1]
+            textpos[0]["x"] - font.getsize(linea)[0] // 2, 
+            textpos[0]["y"] - font.getsize(linea)[1] // 2
         )
         for frame in ImageSequence.Iterator(image):
             frame = frame.convert("RGB")
