@@ -109,7 +109,11 @@ def memeList(page):
         maximo = 0
         for linea in data[x]['textpos']:
             maximo = max(maximo, linea['id'])
-        lista += "* {}: {} parámetros\n".format(x, maximo+1)
+        if "anim" in data[x]:
+            lista += "[*] {}: {} parametros\n".format(x, maximo+1)
+        else:
+            lista += "* {}: {} parámetros\n".format(x, maximo+1)
+    lista += "Los memes que empiezan con [*] requieren usar anim\n"
     lista += "Los parámetros se separan con guión bajo (_)\n"
     lista += "Ejemplo: "
     lista += ";meme drake_memes con paint_memes con memer"
