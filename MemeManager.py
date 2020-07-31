@@ -92,8 +92,7 @@ class MemeManager:
             textImg = self.textToImage(i, rotacion)
             corner = (
                 data['x'] - textImg.size[0] // 2,
-                data['y'] - textImg.size[1] // 2
-                    + textImg.size[1] * contador + 5
+                data['y'] + (self.FONT_SIZE + 4) * contador
             )
             contador = contador + 1
             image.paste(textImg, box=corner, mask=textImg)
