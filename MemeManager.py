@@ -49,23 +49,11 @@ class MemeManager:
         memeInfo = dataJSON[memeName]
         textpos = memeInfo['textpos']
         frames = []
-        linea = text[0]
-        font = ImageFont.truetype(self.FONT_PATH, self.FONT_SIZE)
-        pos = (
-            textpos[0]["x"] - font.getsize(linea)[0] // 2, 
-            textpos[0]["y"] - font.getsize(linea)[1] // 2
-        )
         for frame in ImageSequence.Iterator(image):
             frame = frame.convert("RGB")
-
-            d = ImageDraw.Draw(frame)
-            d.text(
-                pos,
-                linea,
-                fill=(0, 0, 0),
-                font=font
-            )
-            del d
+ 
+            for i in range(len(textpos)):
+                self.printText(text[textpos[i]["id"]], textpos[i], frame)
 
             frames.append(frame)
         frames[0].save(
@@ -103,8 +91,8 @@ class MemeManager:
         for i in textoSeparado:
             textImg = self.textToImage(i, rotacion)
             corner = (
-                data['x'] - round(textImg.size[0] / 2),
-                data['y'] - round(textImg.size[1] / 2)
+                data['x'] - textImg.size[0] // 2,
+                data['y'] - textImg.size[1] // 2
                     + textImg.size[1] * contador
             )
             contador = contador + 1
