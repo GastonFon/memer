@@ -1,4 +1,4 @@
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont, ImageSequence
 
 import json
 
@@ -15,15 +15,15 @@ class MemeManager:
         text = self.getParams()
         memeName = text[0].lower()
         text = text[1:]
-        try:
-            imagePath = './img/' + memeName + '.jpg'
-            image = Image.open(imagePath)
-        except FileNotFoundError:
-            raise ValueError("File not found")
-
         with open("metadata.json", "r") as data:
             dataJSON = json.load(data)
         memeInfo = dataJSON[memeName]
+        if "anim" in memeInfo:
+            raise ValueError("This is an animated meme")
+        try:
+            image = self.openImage(memeName, '.jpg')
+        except ValueError:
+            return
         textpos = memeInfo['textpos']
         image = self.resizeImage(image)
         for i in range(len(textpos)):
@@ -34,7 +34,55 @@ class MemeManager:
                 raise TypeError("Not enough arguments")
         image.save('temp.jpg')
         image.close()
+        return    
+
+    def getAnimatedMeme(self):
+        text = self.getParams()
+        memeName = text[0].lower()
+        text = text[1:]
+        try:
+            image = self.openImage(memeName, '.gif')
+        except ValueError:
+            return
+        with open("metadata.json", "r") as data:
+            dataJSON = json.load(data)
+        memeInfo = dataJSON[memeName]
+        textpos = memeInfo['textpos']
+        frames = []
+        linea = text[0]
+        font = ImageFont.truetype(self.FONT_PATH, self.FONT_SIZE)
+        pos = (
+            textpos[0]["x"] - font.getsize(linea)[0], 
+            textpos[0]["y"] - font.getsize(linea)[1]
+        )
+        for frame in ImageSequence.Iterator(image):
+            frame = frame.convert("RGB")
+
+            d = ImageDraw.Draw(frame)
+            d.text(
+                pos,
+                linea,
+                fill=(0, 0, 0),
+                font=font
+            )
+            del d
+
+            frames.append(frame)
+        frames[0].save(
+            "temp.gif",
+            format="GIF",
+            save_all=True,
+            append_images=frames[1:]
+        )
         return
+
+    def openImage(self, name, extension):
+        imagePath = './img/' + name + extension
+        try:
+            image = Image.open(imagePath)
+            return image
+        except FileNotFoundError:
+            raise ValueError("File not found")
 
     def getParams(self):
         return self.rawText.split('_')

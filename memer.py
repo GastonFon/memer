@@ -43,11 +43,21 @@ async def on_message(message):
         channel = client.get_channel(738515125245575169)
         msg = msg[8:]
 
+    isGif = False
+
+    if msg.startswith("anim"):
+        isGif = True
+        msg = msg[5:]
+
     memeManager = MemeManager(msg)
 
     try:
-        memeManager.getMeme()
-        await channel.send(file=discord.File('temp.jpg'))
+        if not isGif:
+            memeManager.getMeme()
+            await channel.send(file=discord.File('temp.jpg'))
+        else:
+            memeManager.getAnimatedMeme()
+            await channel.send(file=discord.File('temp.gif'))
         await message.delete()
     except ValueError:
         await message.channel.send("Joke not found.")
