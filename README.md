@@ -6,7 +6,7 @@ Hecho con [Discord.py](https://github.com/Rapptz/discord.py)
 
 Actualmente se encuentra hosteado en Heroku.
 
-Link para añadir al bot: **proximamente**
+[Link para añadir al bot](https://discord.com/api/oauth2/authorize?client_id=733072938273865749&permissions=8&scope=bot)
 
 ## Instalación
 
