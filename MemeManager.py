@@ -93,7 +93,7 @@ class MemeManager:
             corner = (
                 data['x'] - textImg.size[0] // 2,
                 data['y'] - textImg.size[1] // 2
-                    + textImg.size[1] * contador
+                    + textImg.size[1] * contador + 5
             )
             contador = contador + 1
             image.paste(textImg, box=corner, mask=textImg)
