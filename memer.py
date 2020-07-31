@@ -26,17 +26,22 @@ async def on_message(message):
 
     msg = msg[6:]
 
-    if msg.startswith("list") or msg.startswith("help"):
+    if msg.startswith("list"):
         try:
             page = int(msg[5:])
         except ValueError:
             page = 1
         finally:
-            helpMsg = await message.channel.send(help(page))
+            helpMsg = await message.channel.send(memeList(page))
             await helpMsg.add_reaction("\U00002B05")
             await helpMsg.add_reaction("\U000027A1")
             return
-            
+    elif msg.startswith("help"):
+        helpEmbed = getHelpEmbed()
+        await message.channel.send(embed=helpEmbed)
+        return
+
+
     channel = message.channel
 
     if msg.startswith("general"):
@@ -85,17 +90,16 @@ async def on_reaction_add(reaction, user):
         page = max(page - 1, 1)
     elif emoji == RIGHT_ARROW:
         page = page + 1
-    await message.edit(content=help(page))
+    await message.edit(content=memeList(page))
 
-    
-
-def help(page):
+def memeList(page):
     with open("metadata.json", "r") as metadata:
         data = json.load(metadata)
-    ayuda = "```asciidoc"
-    ayuda += "\nMemer, bot de discord\n"
-    ayuda += "=====================\n"
-    ayuda += "[Lista de memes: Página {}]\n".format(page)
+
+    lista = "```asciidoc"
+    lista += "\nMemer, bot de discord\n"
+    lista += "=====================\n"
+    lista += "[Lista de memes: Página {}]\n".format(page)
     actual = 0
     for x in data:
         if actual // 10 != (page - 1):
@@ -105,11 +109,18 @@ def help(page):
         maximo = 0
         for linea in data[x]['textpos']:
             maximo = max(maximo, linea['id'])
-        ayuda += "* {}: {} parámetros\n".format(x, maximo+1)
-    ayuda += "Los parámetros se separan con guión bajo (_)\n"
-    ayuda += "Ejemplo: "
-    ayuda += ";meme drake_memes con paint_memes con memer"
-    ayuda += "```"
-    return ayuda
+        lista += "* {}: {} parámetros\n".format(x, maximo+1)
+    lista += "Los parámetros se separan con guión bajo (_)\n"
+    lista += "Ejemplo: "
+    lista += ";meme drake_memes con paint_memes con memer"
+    lista += "```"
+    return lista
     
+def getHelpEmbed():
+    with open("embed.json", "r") as embed:
+        data = json.load(embed)
+        helpEmbed = discord.Embed().from_dict(data)
+    return helpEmbed
+
+
 client.run(os.environ['DISCORD_TOKEN'])

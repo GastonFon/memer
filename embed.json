@@ -1,0 +1,28 @@
+{
+    "title": "Memer",
+    "type": "rich",
+    "description": "Bot de Discord",
+    "url": "https://github.com/GastonFon/memer",
+    "color": 3066993,
+    "footer": {
+        "text": "OIA-UNLAM",
+        "icon_url": "https://cdn.discordapp.com/attachments/733103077107695677/738783520050118686/icon.jpg"
+    },
+    "image": {
+        "url": "https://cdn.discordapp.com/attachments/733103077107695677/738783520050118686/icon.jpg",
+        "height": 294,
+        "width": 248
+    },
+    "fields": [
+        {
+            "name": "Usando el bot",
+            "value": "Para poder hacer un meme mediante el bot, hay que iniciar el mensaje con ;meme, seguido por parámetros opcionales separados por, espacios, y luego el nombre del meme y sus parámetros, separados por barras bajas (_) \nEjemplo: ';meme drake_memes con paint_memes con memer'", 
+            "inline": false
+        },
+        {
+            "name": "Parámetros opcionales",
+            "value": "Actualmente, hay dos parámetros opcionales: \n-anim: debe indicarse si el template es un GIF \n-general: si se usa, el meme va a enviarse al canal #memes en lugar del canal actual",
+            "inline": false
+        }
+    ]
+}
