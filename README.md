@@ -23,7 +23,7 @@ Los parámetros del meme se separan con espacios. En el caso de que se quiera us
 más de una palabra en el argumento (como al momento de hacer un meme), se puede
 indicar que es un solo argumento poniéndolo todo entre comillas dobles `""`
 
-Ejemplo: `;meme drake "Memes con Paint" "Memes con Memer"` produce el siguiente meme:
+Ejemplo: `;meme get drake "Memes con Paint" "Memes con Memer"` produce el siguiente meme:
 ![Ejemplo](https://cdn.discordapp.com/attachments/733103077107695677/738823867551973398/temp.jpg)
 
 La lista completa de memes se puede obtener mediante el comando `;meme list`.

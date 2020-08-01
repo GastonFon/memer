@@ -16,7 +16,7 @@
     "fields": [
         {
             "name": "Usando el bot",
-            "value": "Para poder hacer un meme mediante el bot, hay que iniciar el mensaje con ;meme, seguido de parámetros opcionales, el nombre del meme, y los textos. En el caso de que un texto sea más de una palabra, debe ponerse entre comillas dobles \"\". \nEjemplo: `;meme drake \"Memes con paint\" \"memes con memer\"`\nPara una lista de memes, podes hacer:\n`;meme list`", 
+            "value": "Para poder hacer un meme mediante el bot, hay que iniciar el mensaje con ;meme, seguido de parámetros opcionales, el nombre del meme, y los textos. En el caso de que un texto sea más de una palabra, debe ponerse entre comillas dobles \"\". \nEjemplo: `;meme get drake \"Memes con paint\" \"memes con memer\"`\nPara una lista de memes, podes hacer:\n`;meme list`", 
             "inline": false
         },
         {
