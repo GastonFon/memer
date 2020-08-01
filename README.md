@@ -19,9 +19,11 @@ para usarlo.
 ## Uso
 
 Todos los mensajes enviados al bot deben comenzar por `;meme`.
-Los parámetros del meme se separan con barras bajas `_`.
+Los parámetros del meme se separan con espacios. En el caso de que se quiera usar
+más de una palabra en el argumento (como al momento de hacer un meme), se puede
+indicar que es un solo argumento poniéndolo todo entre comillas dobles `""`
 
-Ejemplo: `;meme drake_Memes con Paint_Memes con Memer` produce el siguiente meme:
+Ejemplo: `;meme drake "Memes con Paint" "Memes con Memer"` produce el siguiente meme:
 ![Ejemplo](https://cdn.discordapp.com/attachments/733103077107695677/738823867551973398/temp.jpg)
 
 La lista completa de memes se puede obtener mediante el comando `;meme list`.

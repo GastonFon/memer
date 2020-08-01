@@ -146,9 +146,6 @@ class MemeManager:
                     maxID + 1
                 )
         memeList += "Los memes con . requieren anim\n"
-        memeList += "Los parámetros se separan con guión bajo (_)\n"
-        memeList += "Ejemplo: "
-        memeList += ";meme drake_memes con paint_memes con memer```"
         return memeList
 
 #Para poder debugear sin necesidad de correr el bot
