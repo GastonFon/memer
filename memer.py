@@ -1,12 +1,17 @@
 import discord
 import json
-import os 
 import re
+
+from os import environ
 
 from MemeManager import MemeManager
 
-#Make the discord client
+#Creo el cliente de Discord
 client = discord.Client()
+
+#Constantes para las reacciones
+LEFT_ARROW = "\U00002B05"
+RIGHT_ARROW = "\U000027A1"
 
 @client.event
 async def on_ready():
@@ -14,12 +19,13 @@ async def on_ready():
     
 @client.event
 async def on_message(message):
-    #Chequeamos que el bot no se esté respondiendo solo
-    if message.author == client.user:
+    #Chequeamos que el bot no este respondiendo a otro bot
+    if message.author.bot:
         return
     
     #Recibo el mensaje
     msg = str(message.content)
+    channel = message.channel
 
     if not msg.startswith(';meme'):
         return
@@ -32,27 +38,27 @@ async def on_message(message):
         except ValueError:
             page = 1
         finally:
-            helpMsg = await message.channel.send(memeList(page))
-            await helpMsg.add_reaction("\U00002B05")
-            await helpMsg.add_reaction("\U000027A1")
+            helpMsg = await channel.send(memeList(page))
+            await helpMsg.add_reaction(LEFT_ARROW)
+            await helpMsg.add_reaction(RIGHT_ARROW)
             return
     elif msg.startswith("help"):
         helpEmbed = getHelpEmbed()
         await message.channel.send(embed=helpEmbed)
         return
 
-
-    channel = message.channel
-
     if msg.startswith("general"):
-        channel = client.get_channel(738515125245575169)
+        for i in message.guild.channels:
+            if i.name == "memes" or i.name == "meme":
+                channel = i
+                break
         msg = msg[8:]
-
-    isGif = False
 
     if msg.startswith("anim"):
         isGif = True
         msg = msg[5:]
+    else:
+        isGif = False
 
     memeManager = MemeManager(msg)
 
@@ -73,8 +79,6 @@ async def on_message(message):
 
 @client.event
 async def on_reaction_add(reaction, user):
-    LEFT_ARROW = "\U00002B05"
-    RIGHT_ARROW = "\U000027A1"
     message = reaction.message
     msg = str(message.content)
     if user == client.user:
@@ -105,6 +109,8 @@ def memeList(page):
         if actual // 10 != (page - 1):
             actual = actual + 1
             continue
+        elif actual // 10 >= page:
+            break
         actual = actual + 1
         maximo = 0
         for linea in data[x]['textpos']:
@@ -119,12 +125,12 @@ def memeList(page):
     lista += ";meme drake_memes con paint_memes con memer"
     lista += "```"
     return lista
-    
+   
 def getHelpEmbed():
     with open("embed.json", "r") as embed:
         data = json.load(embed)
         helpEmbed = discord.Embed().from_dict(data)
     return helpEmbed
 
-
-client.run(os.environ['DISCORD_TOKEN'])
+if __name__ == "__main__":
+    client.run(environ['DISCORD_TOKEN'])
