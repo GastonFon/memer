@@ -8,13 +8,12 @@ class MemeManager:
     FONT_SIZE = 24
     FONT_PATH = './fonts/Roboto.ttf'
 
-    def __init__(self, text):
-        self.rawText = text
+    def setText(self, text):
+        self.args = text
 
     def getMeme(self):
-        text = self.getParams()
-        memeName = text[0].lower()
-        text = text[1:]
+        memeName = self.args[0].lower()
+        text = self.args[1:]
         with open("metadata.json", "r") as data:
             dataJSON = json.load(data)
         memeInfo = dataJSON[memeName]
@@ -37,9 +36,8 @@ class MemeManager:
         return    
 
     def getAnimatedMeme(self):
-        text = self.getParams()
-        memeName = text[0].lower()
-        text = text[1:]
+        memeName = self.args[0].lower()
+        text = self.args[1:]
         try:
             image = self.openImage(memeName, '.gif')
         except ValueError:
@@ -53,7 +51,11 @@ class MemeManager:
             frame = frame.convert("RGB")
  
             for i in range(len(textpos)):
-                self.printText(text[textpos[i]["id"]], textpos[i], frame)
+                self.printText(
+                    text[textpos[i]["id"]], 
+                    textpos[i], 
+                    frame
+                )
 
             frames.append(frame)
         frames[0].save(
@@ -71,9 +73,6 @@ class MemeManager:
             return image
         except FileNotFoundError:
             raise ValueError("File not found")
-
-    def getParams(self):
-        return self.rawText.split('_')
 
     def resizeImage(self, image):
         aspectRatio = image.size[1] / image.size[0]
@@ -117,6 +116,40 @@ class MemeManager:
         )
         return textImg
 
+    @staticmethod
+    def getMemeList(page):
+        memeList = "```asciidoc"
+        memeList += "\nMemer, bot de discord\n"
+        memeList += "====================\n"
+        memeList += "[Lista de memes: Página {}]\n".format(page)
+        with open("metadata.json", "r") as metadata:
+            data = json.load(metadata)
+        i = 0
+        for meme in data:
+            if i // 10 != (page - 1):
+                i = i + 1
+                continue
+            elif i // 10 >= page:
+                break
+            i = i + 1
+            maxID = 0
+            for line in data[meme]['textpos']:
+                maxID = max(maxID, line['id'])
+            if "anim" in data[meme]:
+                memeList += ". {}: {} parámetros\n".format(
+                    meme,
+                    maxID + 1
+                )
+            else:
+                memeList += "* {}: {} parámetros\n".format(
+                    meme,
+                    maxID + 1
+                )
+        memeList += "Los memes con . requieren anim\n"
+        memeList += "Los parámetros se separan con guión bajo (_)\n"
+        memeList += "Ejemplo: "
+        memeList += ";meme drake_memes con paint_memes con memer```"
+        return memeList
 
 #Para poder debugear sin necesidad de correr el bot
 if __name__ == '__main__':

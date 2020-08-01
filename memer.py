@@ -2,78 +2,81 @@ import discord
 import json
 import re
 
+from discord.ext import commands
 from os import environ
 
 from MemeManager import MemeManager
 
-#Creo el cliente de Discord
-client = discord.Client()
+client = commands.Bot(
+    command_prefix = ";meme ",
+    case_insensitive = False,
+    owner_ids = (
+        550695764041400351, 
+        639924381690101771, 
+        208621559709958145
+    ),
+    help_command = None,
+    self_bot = False
+)
 
-#Constantes para las reacciones
-LEFT_ARROW = "\U00002B05"
-RIGHT_ARROW = "\U000027A1"
+memeManager = MemeManager()
+
+SPECIAL_ARGS = ('anim', 'general')
+
+EMOJIS = ("\U00002B05", "\U000027A1")
 
 @client.event
 async def on_ready():
     print("The bot is ready!")
-    
-@client.event
-async def on_message(message):
-    #Chequeamos que el bot no este respondiendo a otro bot
-    if message.author.bot:
-        return
-    
-    #Recibo el mensaje
-    msg = str(message.content)
-    channel = message.channel
 
-    if not msg.startswith(';meme'):
-        return
+@client.command()
+async def list(ctx, page=1):
+    memeList = MemeManager.getMemeList(page)
+    await ctx.send(memeList)
 
-    msg = msg[6:]
+@client.command()
+async def help(ctx):
+    with open("embed.json", "r") as embed:
+        data = json.load(embed)
+        helpEmbed = discord.Embed().from_dict(data)
+    await ctx.send(embed=helpEmbed)
 
-    if msg.startswith("list"):
-        try:
-            page = int(msg[5:])
-        except ValueError:
-            page = 1
-        finally:
-            helpMsg = await channel.send(memeList(page))
-            await helpMsg.add_reaction(LEFT_ARROW)
-            await helpMsg.add_reaction(RIGHT_ARROW)
-            return
-    elif msg.startswith("help"):
-        helpEmbed = getHelpEmbed()
-        await message.channel.send(embed=helpEmbed)
-        return
-
-    if msg.startswith("general"):
-        for i in message.guild.channels:
-            if i.name == "memes" or i.name == "meme":
-                channel = i
-                break
-        msg = msg[8:]
-
-    if msg.startswith("anim"):
+@client.command()
+async def get(ctx, *args):
+    if "anim" in args:
         isGif = True
-        msg = msg[5:]
     else:
         isGif = False
 
-    memeManager = MemeManager(msg)
+    channel = ctx.message.channel
+    if "general" in args:
+        if not(channel.type.private or channel.type.group):
+            for i in ctx.message.guild.channels:
+                if i.name == "memes":
+                    channel = i
+                break
+
+    filteredArgs = [item for item in args if item not in SPECIAL_ARGS]
+    
+    memeManager.setText(filteredArgs)
 
     try:
-        if not isGif:
-            memeManager.getMeme()
-            await channel.send(file=discord.File('temp.jpg'))
-        else:
+        if isGif:
             memeManager.getAnimatedMeme()
-            await channel.send(file=discord.File('temp.gif'))
-        await message.delete()
+            imageName = "temp.gif"
+        else:
+            memeManager.getMeme()
+            imageName = "temp.jpg"
     except ValueError:
-        await message.channel.send("Joke not found.")
+        await channel.send("Joke not found")
+        return
     except TypeError:
-        await message.channel.send("Not enough arguments")
+        await channel.send("Not enough arguments")
+        return
+
+    try:
+        await channel.send(file=discord.File(imageName))
+        await ctx.message.delete()
     except discord.errors.Forbidden:
         print("Tried to delete message")
 
@@ -81,56 +84,25 @@ async def on_message(message):
 async def on_reaction_add(reaction, user):
     message = reaction.message
     msg = str(message.content)
-    if user == client.user:
+
+    if user.bot or message.author != client.user:
         return
-    if message.author != client.user:
-        return
+
     emoji = str(reaction)
-    if emoji != LEFT_ARROW and emoji != RIGHT_ARROW:
+
+    if emoji not in EMOJIS:
         return
+
     pageRegex = re.compile(r"\d+\]")
     page = int(pageRegex.search(msg).group(0)[:-1])
-    if emoji == LEFT_ARROW:
+
+    if emoji == EMOJIS[0]:
         page = max(page - 1, 1)
-    elif emoji == RIGHT_ARROW:
+    elif emoji == EMOJIS[1]:
         page = page + 1
-    await message.edit(content=memeList(page))
 
-def memeList(page):
-    with open("metadata.json", "r") as metadata:
-        data = json.load(metadata)
-
-    lista = "```asciidoc"
-    lista += "\nMemer, bot de discord\n"
-    lista += "=====================\n"
-    lista += "[Lista de memes: Página {}]\n".format(page)
-    actual = 0
-    for x in data:
-        if actual // 10 != (page - 1):
-            actual = actual + 1
-            continue
-        elif actual // 10 >= page:
-            break
-        actual = actual + 1
-        maximo = 0
-        for linea in data[x]['textpos']:
-            maximo = max(maximo, linea['id'])
-        if "anim" in data[x]:
-            lista += ". {}: {} parametros\n".format(x, maximo+1)
-        else:
-            lista += "* {}: {} parámetros\n".format(x, maximo+1)
-    lista += "Los memes que empiezan con . requieren usar anim\n"
-    lista += "Los parámetros se separan con guión bajo (_)\n"
-    lista += "Ejemplo: "
-    lista += ";meme drake_memes con paint_memes con memer"
-    lista += "```"
-    return lista
-   
-def getHelpEmbed():
-    with open("embed.json", "r") as embed:
-        data = json.load(embed)
-        helpEmbed = discord.Embed().from_dict(data)
-    return helpEmbed
+    memeList = MemeManager.getMemeList(page)
+    await message.edit(content=memeList)
 
 if __name__ == "__main__":
-    client.run(environ['DISCORD_TOKEN'])
+    client.run(environ["DISCORD_TOKEN"])
