@@ -146,6 +146,7 @@ class MemeManager:
                     maxID + 1
                 )
         memeList += "Los memes con . requieren anim\n"
+        memeList += "```"
         return memeList
 
 #Para poder debugear sin necesidad de correr el bot
