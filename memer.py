@@ -1,11 +1,14 @@
 import discord
 import json
 import re
+import requests
 
 from discord.ext import commands
 from os import environ
+from io import BytesIO
 
 from MemeManager import MemeManager
+from XKCDManager import XKCDManager
 
 client = commands.Bot(
     command_prefix = ";meme ",
@@ -42,6 +45,16 @@ async def help(ctx):
         data = json.load(embed)
         helpEmbed = discord.Embed().from_dict(data)
     await ctx.send(embed=helpEmbed)
+
+@client.command()
+async def xkcd(ctx, id):
+    comic = XKCDManager.getXKCDByID(id)
+    text = XKCDManager.getMessageText(comic)
+    response = requests.get("http:" + comic["src"])
+    await ctx.send(
+        text,
+        file=discord.File(BytesIO(response.content), "XKCD" + str(id) + ".png")
+    )
 
 @client.command()
 async def get(ctx, *args):
