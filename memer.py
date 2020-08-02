@@ -32,7 +32,9 @@ async def on_ready():
 @client.command()
 async def list(ctx, page=1):
     memeList = MemeManager.getMemeList(page)
-    await ctx.send(memeList)
+    listMessage = await ctx.send(memeList)
+    await listMessage.add_reaction(EMOJIS[0])
+    await listMessage.add_reaction(EMOJIS[1])
 
 @client.command()
 async def help(ctx):
