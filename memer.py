@@ -12,6 +12,7 @@ from XKCDManager import XKCDManager
 
 client = commands.Bot(
     command_prefix = ";meme ",
+    activity = discord.Game(name=";meme help"),
     case_insensitive = False,
     owner_ids = (
         550695764041400351, 
