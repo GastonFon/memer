@@ -28,7 +28,7 @@ class MemeManager:
         for i in range(len(textpos)):
             try:
                 linea = text[textpos[i]["id"]]
-                self.printText(linea, textpos[i], image)
+                self.printText(linea, textpos[i], image, memeInfo)
             except IndexError:
                 raise TypeError("Not enough arguments")
         image.save('temp.jpg')
@@ -54,7 +54,8 @@ class MemeManager:
                 self.printText(
                     text[textpos[i]["id"]], 
                     textpos[i], 
-                    frame
+                    frame,
+                    memeInfo
                 )
 
             frames.append(frame)
@@ -80,18 +81,22 @@ class MemeManager:
         height = round(aspectRatio * width)
         return image.resize((width, height))
 
-    def printText(self, texto, data, image):
+    def printText(self, texto, data, image, memeInfo):
         if "deg" in data:
             rotacion = self.getRotation(data["deg"])
         else:
             rotacion = 0
         textoSeparado = texto.split('\n')
         contador = 0
+        if "fontsize" in memeInfo:
+            fontsize = memeInfo["fontsize"]
+        else:
+            fontsize = self.FONT_SIZE
         for i in textoSeparado:
-            textImg = self.textToImage(i, rotacion)
+            textImg = self.textToImage(i, rotacion, fontsize)
             corner = (
                 data['x'] - textImg.size[0] // 2,
-                data['y'] + (self.FONT_SIZE + 4) * contador
+                data['y'] + (fontsize + 4) * contador
             )
             contador = contador + 1
             image.paste(textImg, box=corner, mask=textImg)
@@ -99,8 +104,8 @@ class MemeManager:
     def getRotation(self, deg):
         return ((deg % 360) + 360) % 360
 
-    def textToImage(self, text, deg): 
-        font = ImageFont.truetype(self.FONT_PATH, self.FONT_SIZE)
+    def textToImage(self, text, deg, fontsize): 
+        font = ImageFont.truetype(self.FONT_PATH, fontsize)
         textImg = Image.new("RGBA", font.getsize(text),
                 color=(255, 255, 255, 255))
         textDraw = ImageDraw.Draw(textImg)
