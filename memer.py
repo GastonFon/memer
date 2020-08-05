@@ -35,6 +35,8 @@ async def on_ready():
 
 @client.command()
 async def list(ctx, page=1):
+    if page <= 0:
+        page = 1
     memeList = MemeManager.getMemeList(page)
     listMessage = await ctx.send(memeList)
     await listMessage.add_reaction(EMOJIS[0])
@@ -78,7 +80,8 @@ async def get(ctx, *args):
 
     try:
         if isGif:
-            memeManager.getAnimatedMeme()
+            async with channel.typing():
+                memeManager.getAnimatedMeme()
             imageName = "temp.gif"
         else:
             memeManager.getMeme()
