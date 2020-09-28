@@ -33,7 +33,7 @@ class MemeManager:
                 raise TypeError("Not enough arguments")
         image.save('temp.jpg')
         image.close()
-        return    
+        return
 
     def getAnimatedMeme(self):
         memeName = self.args[0].lower()
@@ -49,11 +49,11 @@ class MemeManager:
         frames = []
         for frame in ImageSequence.Iterator(image):
             frame = frame.convert("RGB")
- 
+
             for i in range(len(textpos)):
                 self.printText(
-                    text[textpos[i]["id"]], 
-                    textpos[i], 
+                    text[textpos[i]["id"]],
+                    textpos[i],
                     frame,
                     memeInfo
                 )
@@ -104,7 +104,7 @@ class MemeManager:
     def getRotation(self, deg):
         return ((deg % 360) + 360) % 360
 
-    def textToImage(self, text, deg, fontsize): 
+    def textToImage(self, text, deg, fontsize):
         font = ImageFont.truetype(self.FONT_PATH, fontsize)
         textImg = Image.new("RGBA", font.getsize(text),
                 color=(255, 255, 255, 255))
